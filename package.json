@@ -8,10 +8,13 @@
     "xterm": "*"
   },
   "devDependencies": {
+    "css-loader": "*",
+    "style-loader": "*",
     "webpack": "*",
     "webpack-cli": "*",
     "webpack-dev-server": "*"
   },
   "scripts": {
+    "start": "webpack-dev-server --mode development --content-base dist"
   }
 }
