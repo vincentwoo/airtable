@@ -42,17 +42,19 @@ export default class Timeline {
     bufferCanvas.width = WIDTH
     bufferCanvas.height = HEIGHT
     this.bufferContext = bufferCanvas.getContext('2d')
-    document.body.appendChild(bufferCanvas)
-    this.domElement = document.createElement('pre')
+    this.bufferContext.font = `${FONT_SIZE}px monospace`
+    this.bufferContext.fillStyle = '#00FF41'
+    // document.body.appendChild(bufferCanvas)
     this.prerendered = this._prerenderTracks(this.tracks)
-    this.render()
-
     CRTify(canvas, this.bufferContext, WIDTH, HEIGHT)
+    this.render()
   }
 
   render() {
-    this.domElement.innerHTML = this._renderWindow(this.x)
-    this._copyDOMtoCanvas(this.domElement, this.bufferContext)
+    this.bufferContext.clearRect(0, 0, WIDTH, HEIGHT)
+    _.each(this._renderWindow(this.x), (row, idx) => {
+      this.bufferContext.fillText(row, 5, 5 + (idx + 0.5) * FONT_SIZE)
+    })
   }
 
   forward() {
@@ -88,9 +90,9 @@ export default class Timeline {
     })
   }
 
-  // prepare the shadow <pre> buffer window, with the left edge starting at char `x`
+  // prepare the shadow buffer window, with the left edge starting at char `x`
   _renderWindow(x) {
-    return this.prerendered.map(row => row.substr(x, TTY_WIDTH)).join("\n")
+    return this.prerendered.map(row => row.substr(x, TTY_WIDTH))
   }
 
   _checkIntersect(item1, item2) {
@@ -100,21 +102,5 @@ export default class Timeline {
     } else {
       return item1.start < item2.end
     }
-  }
-
-  _copyDOMtoCanvas(element, ctx) {
-    const img = new Image()
-    img.addEventListener('load', function() {
-      ctx.clearRect(0, 0, WIDTH, HEIGHT)
-      ctx.drawImage(img, 0, 0)
-    }, false)
-    img.src = `data:image/svg+xml;charset=utf-8,
-      <svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}">
-        <foreignObject width="100%" height="100%">
-          <pre xmlns="http://www.w3.org/1999/xhtml"
-            style="margin: 0; padding: 0; color: #00FF41; font: bold ${FONT_SIZE}px monospace;"
-          >${element.innerHTML}</pre>
-        </foreignObject>
-      </svg>`
   }
 }
