@@ -4,8 +4,7 @@
   "private": true,
   "dependencies": {
     "lodash": "*",
-    "moment": "*",
-    "xterm": "*"
+    "moment": "*"
   },
   "devDependencies": {
     "css-loader": "*",
