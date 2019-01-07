@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import moment from 'moment'
+import './crt'
 
 const WIDTH = 800
 const HEIGHT = 600
@@ -75,17 +76,9 @@ export default class Timeline {
           ? item.name + _.repeat(' ', maxNameLength - item.name.length)
           : item.name.substr(0, maxNameLength - 3) + '...'
 
-        rows[0] += '+'
-        rows[1] += '|'
-        rows[2] += '+'
-        for (const char of name) {
-          rows[0] += '-'
-          rows[1] += char
-          rows[2] += '-'
-        }
-        rows[0] += '+'
-        rows[1] += '|'
-        rows[2] += '+'
+        rows[0] += `+${_.repeat('-', name.length)}+`
+        rows[1] += `|${name}|`
+        rows[2] += `+${_.repeat('-', name.length)}+`
       }
       return rows
     })

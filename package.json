@@ -3,8 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "gl-matrix": "*",
     "lodash": "*",
-    "moment": "*"
+    "moment": "*",
+    "onecolor": "*",
+    "regl": "*"
   },
   "devDependencies": {
     "css-loader": "*",
