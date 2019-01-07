@@ -7,7 +7,7 @@ const HEIGHT = 600
 const TTY_WIDTH = 82
 const TTY_HEIGHT = 24
 const FONT_SIZE = 16
-const CHARACTERS_PER_DAY = 4
+const CHARACTERS_PER_DAY = 5
 
 export default class Timeline {
   constructor(items, canvas) {
@@ -36,11 +36,9 @@ export default class Timeline {
     }
 
     this.x = 0 // start rendering at the far left
-    canvas.style.width = WIDTH + 'px'
-    canvas.style.height = HEIGHT + 'px'
     const bufferCanvas = document.createElement('canvas')
-    bufferCanvas.width = WIDTH
-    bufferCanvas.height = HEIGHT
+    canvas.width = bufferCanvas.width = WIDTH
+    canvas.height = bufferCanvas.height = HEIGHT
     this.bufferContext = bufferCanvas.getContext('2d')
     this.bufferContext.font = `${FONT_SIZE}px monospace`
     this.bufferContext.fillStyle = '#00FF41'
@@ -92,8 +90,8 @@ export default class Timeline {
     const lastDay = _.last(_.sortBy(this.items, 'end')).end
     const numDays = lastDay.diff(firstDay, 'days')
     for (let day = 0; day < numDays; day++) {
-      rows[0] += firstDay.format('MMM ')
-      rows[1] += firstDay.format('DD  ')
+      rows[0] += _.padEnd(firstDay.format('MMM'), CHARACTERS_PER_DAY)
+      rows[1] += _.padEnd(firstDay.format('DD'), CHARACTERS_PER_DAY)
       firstDay.add(1, 'days')
     }
 
