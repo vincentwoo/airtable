@@ -42,6 +42,7 @@ export default class Timeline {
     bufferCanvas.width = WIDTH
     bufferCanvas.height = HEIGHT
     this.bufferContext = bufferCanvas.getContext('2d')
+    document.body.appendChild(bufferCanvas)
     this.domElement = document.createElement('pre')
     this.prerendered = this._prerenderTracks(this.tracks)
     this.render()
@@ -102,19 +103,18 @@ export default class Timeline {
   }
 
   _copyDOMtoCanvas(element, ctx) {
-    const data =
-      `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}px" height="${HEIGHT}px">
-        <foreignObject width="100%" height="100%">
-          <pre xmlns="http://www.w3.org/1999/xhtml"
-            style="margin: 0; padding: 0; color: white; font: ${FONT_SIZE}px monospace;"
-          >${element.innerHTML}</pre>
-        </foreignObject>
-      </svg>`
     const img = new Image()
     img.addEventListener('load', function() {
       ctx.clearRect(0, 0, WIDTH, HEIGHT)
       ctx.drawImage(img, 0, 0)
     }, false)
-    img.src = 'data:image/svg+xml;charset=utf-8,' + data
+    img.src = `data:image/svg+xml;charset=utf-8,
+      <svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}px" height="${HEIGHT}px">
+        <foreignObject width="100%" height="100%">
+          <pre xmlns="http://www.w3.org/1999/xhtml"
+            style="margin: 0; padding: 0; color: #00FF41; font: bold ${FONT_SIZE}px monospace;"
+          >${element.innerHTML}</pre>
+        </foreignObject>
+      </svg>`
   }
 }
