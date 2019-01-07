@@ -1,5 +1,3 @@
-import './index.css'
-
 import Timeline from './timeline'
 import timelineItems from './timelineItems'
 

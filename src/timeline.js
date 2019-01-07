@@ -4,7 +4,7 @@ import CRTify from './crt'
 
 const WIDTH = 800
 const HEIGHT = 600
-const TTY_WIDTH = 83
+const TTY_WIDTH = 82
 const TTY_HEIGHT = 24
 const FONT_SIZE = 16
 const CHARACTERS_PER_DAY = 4
@@ -53,7 +53,7 @@ export default class Timeline {
   render() {
     this.bufferContext.clearRect(0, 0, WIDTH, HEIGHT)
     _.each(this._renderWindow(this.x), (row, idx) => {
-      this.bufferContext.fillText(row, 5, 5 + (idx + 0.5) * FONT_SIZE)
+      this.bufferContext.fillText(row, 5, 20 + idx * 1.5 * FONT_SIZE)
     })
   }
 
@@ -69,18 +69,16 @@ export default class Timeline {
 
   // calculate the entire view once as an array of strings
   _prerenderTracks(tracks) {
-    return _.flatMap(tracks, track => {
+    const rows = _.flatMap(tracks, track => {
       let rows = ['', '', '']
       for (const item of track) {
         const targetRowLength = item.firstDay * CHARACTERS_PER_DAY
-        if (rows[0].length < targetRowLength) {
-          rows = rows.map(row => row + _.repeat(' ', targetRowLength - row.length))
-        }
+        rows = rows.map(row => _.padEnd(row, targetRowLength))
 
         const maxNameLength = item.length * CHARACTERS_PER_DAY - 2
-        const name = item.name.length < maxNameLength
-          ? item.name + _.repeat(' ', maxNameLength - item.name.length)
-          : item.name.substr(0, maxNameLength - 3) + '...'
+        const name = _.padEnd(_.truncate(item.name, {
+          length: maxNameLength,
+        }), maxNameLength)
 
         rows[0] += `+${_.repeat('-', name.length)}+`
         rows[1] += `|${name}|`
@@ -88,11 +86,28 @@ export default class Timeline {
       }
       return rows
     })
+
+    rows.unshift('', '')
+    const firstDay = this.items[0].start
+    const lastDay = _.last(_.sortBy(this.items, 'end')).end
+    const numDays = lastDay.diff(firstDay, 'days')
+    for (let day = 0; day < numDays; day++) {
+      rows[0] += firstDay.format('MMM ')
+      rows[1] += firstDay.format('DD  ')
+      firstDay.add(1, 'days')
+    }
+
+    while (rows.length < TTY_HEIGHT) {
+      rows.push('')
+    }
+    return rows
   }
 
   // prepare the shadow buffer window, with the left edge starting at char `x`
   _renderWindow(x) {
-    return this.prerendered.map(row => row.substr(x, TTY_WIDTH))
+    const ret = this.prerendered.map(row => row.substr(x, TTY_WIDTH))
+    ret[ret.length - 1] = _.padStart('Left/Right keys to scroll', TTY_WIDTH)
+    return ret
   }
 
   _checkIntersect(item1, item2) {

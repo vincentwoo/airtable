@@ -2,6 +2,7 @@ import onecolor from 'onecolor'
 import { vec3 } from 'gl-matrix'
 import REGL from 'regl'
 
+// stolen shamelessly from https://codepen.io/unframework/pen/pqorjJ
 export default function CRTify(destCanvas, bufferContext, bufferW, bufferH) {
   const regl = REGL({
     canvas: destCanvas,
