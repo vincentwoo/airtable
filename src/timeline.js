@@ -109,7 +109,7 @@ export default class Timeline {
       ctx.drawImage(img, 0, 0)
     }, false)
     img.src = `data:image/svg+xml;charset=utf-8,
-      <svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}px" height="${HEIGHT}px">
+      <svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}">
         <foreignObject width="100%" height="100%">
           <pre xmlns="http://www.w3.org/1999/xhtml"
             style="margin: 0; padding: 0; color: #00FF41; font: bold ${FONT_SIZE}px monospace;"
