@@ -50,6 +50,16 @@ export default class Timeline {
     this._copyDOMtoCanvas(this.domElement, this.canvasCtx)
   }
 
+  forward() {
+    this.x += 1
+    this.render()
+  }
+
+  backward() {
+    this.x = Math.max(this.x - 1, 0)
+    this.render()
+  }
+
   // calculate the entire view once as an array of strings
   _prerenderTracks(tracks) {
     return _.flatMap(tracks, track => {
@@ -111,9 +121,8 @@ export default class Timeline {
     const url = DOMURL.createObjectURL(svg)
     img.addEventListener('load', function() {
       DOMURL.revokeObjectURL(url)
-      ctx.drawImage(img, 0, 0);
-      // debugger
-      // dom.style.display = 'none';
+      ctx.clearRect(0, 0, WIDTH, HEIGHT)
+      ctx.drawImage(img, 0, 0)
     }, false)
     img.src = url
   }
