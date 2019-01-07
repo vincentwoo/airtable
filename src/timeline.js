@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import moment from 'moment'
-import './crt'
+import CRTify from './crt'
 
 const WIDTH = 800
 const HEIGHT = 600
@@ -36,28 +36,31 @@ export default class Timeline {
     }
 
     this.x = 0 // start rendering at the far left
-    this.canvas = canvas
     canvas.style.width = WIDTH + 'px'
     canvas.style.height = HEIGHT + 'px'
-    this.canvasCtx = canvas.getContext('2d')
+    const bufferCanvas = document.createElement('canvas')
+    bufferCanvas.width = WIDTH
+    bufferCanvas.height = HEIGHT
+    this.bufferContext = bufferCanvas.getContext('2d')
     this.domElement = document.createElement('pre')
     this.prerendered = this._prerenderTracks(this.tracks)
-    for (const line of this.prerendered) console.log(line)
     this.render()
+
+    CRTify(canvas, this.bufferContext, WIDTH, HEIGHT)
   }
 
   render() {
     this.domElement.innerHTML = this._renderWindow(this.x)
-    this._copyDOMtoCanvas(this.domElement, this.canvasCtx)
+    this._copyDOMtoCanvas(this.domElement, this.bufferContext)
   }
 
   forward() {
-    this.x += 1
+    this.x += 2
     this.render()
   }
 
   backward() {
-    this.x = Math.max(this.x - 1, 0)
+    this.x = Math.max(this.x - 2, 0)
     this.render()
   }
 
@@ -98,7 +101,6 @@ export default class Timeline {
     }
   }
 
-  // shamelessly stolen from https://codepen.io/beben-koben/pen/GgJxrW
   _copyDOMtoCanvas(element, ctx) {
     const data =
       `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}px" height="${HEIGHT}px">
@@ -108,15 +110,11 @@ export default class Timeline {
           >${element.innerHTML}</pre>
         </foreignObject>
       </svg>`
-    const DOMURL = self.URL || self.webkitURL || self
     const img = new Image()
-    const svg = new Blob([data], { type: 'image/svg+xml;charset=utf-8' })
-    const url = DOMURL.createObjectURL(svg)
     img.addEventListener('load', function() {
-      DOMURL.revokeObjectURL(url)
       ctx.clearRect(0, 0, WIDTH, HEIGHT)
       ctx.drawImage(img, 0, 0)
     }, false)
-    img.src = url
+    img.src = 'data:image/svg+xml;charset=utf-8,' + data
   }
 }
