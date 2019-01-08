@@ -10,24 +10,30 @@
         height: 100%;
         margin: 0;
         padding: 0;
-        font-family: sans-serif;
-        background: black;
+        background: #717479;
+        position: relative;
+        overflow: hidden;
       }
 
-      body {
-        background: url('tandy.jpg') -165px -55px no-repeat;
+      img {
+        width: 2400px;
+        position: absolute;
+        left: -582px;
+        top: -179px;
       }
 
       canvas {
         display: block;
         position: absolute;
-        mix-blend-mode: screen;
-        top: 52px;
-        left: 109px;
+        mix-blend-mode: lighten;
+        top: 189px;
+        left: 157px;
+        transform: rotateZ(-6.5deg) rotateY(22deg) rotateX(-16deg);
       }
     </style>
   </head>
   <body>
+    <img src="appleii.jpg" />
     <canvas id="terminal" width="800" height="600"></canvas>
 
     <script src="main.js"></script>
