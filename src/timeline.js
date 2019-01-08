@@ -106,7 +106,9 @@ export default class Timeline {
   // prepare the shadow buffer window, with the left edge starting at char `x`
   _renderWindow(x) {
     const ret = this.prerendered.map(row => row.substr(x, TTY_WIDTH))
-    ret[ret.length - 1] = _.padStart('Left/Right keys to scroll', TTY_WIDTH)
+    const strings = ['(c) 2019 Vincent Woo', '', 'Left/Right keys to scroll']
+    strings[1] = _.repeat(' ', TTY_WIDTH - _.sumBy(strings, 'length'))
+    ret[ret.length - 1] = strings.join('')
     return ret
   }
 
