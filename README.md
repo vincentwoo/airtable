@@ -1,4 +1,4 @@
-This is my submission for the Airtable frontend interview project. You can look at the [finished product](https://vincentwoo.github.io/airtable/) or run it locally. To do so, checkout the product, run `yarn install`, and then `npm run start`.
+This is my submission for the Airtable [frontend interview project](https://github.com/vincentwoo/airtable/blob/master/Instructions.md). You can look at the [finished product](https://vincentwoo.github.io/airtable/) or run it locally. To do so, checkout the product, run `yarn install`, and then `npm run start`.
 
 > How long you spent on the assignment.
 
