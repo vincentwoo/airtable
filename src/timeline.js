@@ -7,7 +7,7 @@ const HEIGHT = 600
 const TTY_WIDTH = 82
 const TTY_HEIGHT = 24
 const FONT_SIZE = 16
-const CHARACTERS_PER_DAY = 5
+const CHARACTERS_PER_DAY = 4
 
 export default class Timeline {
   constructor(items, canvas) {
@@ -34,8 +34,12 @@ export default class Timeline {
       }
       if (!inserted) this.tracks.push([item])
     }
-
+    this.firstDay = this.items[0].start
+    this.lastDay = _.last(_.sortBy(this.items, 'end')).end
+    this.numDays = this.lastDay.diff(this.firstDay, 'days')
+    console.log(this.numDays)
     this.x = 0 // start rendering at the far left
+
     const bufferCanvas = document.createElement('canvas')
     canvas.width = bufferCanvas.width = WIDTH
     canvas.height = bufferCanvas.height = HEIGHT
@@ -47,7 +51,6 @@ export default class Timeline {
   }
 
   render() {
-    // this.bufferContext.clearRect(0, 0, WIDTH, HEIGHT)
     this.bufferContext.fillStyle = 'rgba(0, 0, 0, 0.75)'
     this.bufferContext.fillRect(0, 0, WIDTH, HEIGHT)
     this.bufferContext.font = `${FONT_SIZE}px monospace`
@@ -59,7 +62,7 @@ export default class Timeline {
   }
 
   forward() {
-    this.x += 2
+    this.x = Math.min(this.x + 2, (this.numDays + 2)  * CHARACTERS_PER_DAY - TTY_WIDTH)
   }
 
   backward() {
@@ -87,13 +90,11 @@ export default class Timeline {
     })
 
     rows.unshift('', '')
-    const firstDay = this.items[0].start
-    const lastDay = _.last(_.sortBy(this.items, 'end')).end
-    const numDays = lastDay.diff(firstDay, 'days')
-    for (let day = 0; day < numDays; day++) {
-      rows[0] += _.padEnd(firstDay.format('MMM'), CHARACTERS_PER_DAY)
-      rows[1] += _.padEnd(firstDay.format('DD'), CHARACTERS_PER_DAY)
-      firstDay.add(1, 'days')
+    const curDay = this.firstDay.clone()
+    for (let day = 0; day <= this.numDays; day++) {
+      rows[0] += _.padEnd(curDay.format('MMM'), CHARACTERS_PER_DAY)
+      rows[1] += _.padEnd(curDay.format('DD'), CHARACTERS_PER_DAY)
+      curDay.add(1, 'days')
     }
 
     while (rows.length < TTY_HEIGHT) {
