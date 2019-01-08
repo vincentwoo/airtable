@@ -20,7 +20,7 @@ If the question is what would I add next, I think the biggest design flaw here i
   |---Second Day-------|
 ```
 
-but I didn't really have the time to get into it.
+but I didn't really have the time to get into it. Also, there are some weird scaling artifacts with the CRT effect, which I think could be fixed by supersampling a bigger texture. That, or scaling a smaller one. I'm not sure.
 
 > How you made your design decisions. For example, if you looked at other timelines for inspiration, please note that.
 
