@@ -40,8 +40,6 @@ export default class Timeline {
     canvas.width = bufferCanvas.width = WIDTH
     canvas.height = bufferCanvas.height = HEIGHT
     this.bufferContext = bufferCanvas.getContext('2d')
-    this.bufferContext.font = `${FONT_SIZE}px monospace`
-    this.bufferContext.fillStyle = '#00FF41'
     // document.body.appendChild(bufferCanvas)
     this.prerendered = this._prerenderTracks(this.tracks)
     CRTify(canvas, this.bufferContext, WIDTH, HEIGHT)
@@ -49,20 +47,23 @@ export default class Timeline {
   }
 
   render() {
-    this.bufferContext.clearRect(0, 0, WIDTH, HEIGHT)
+    // this.bufferContext.clearRect(0, 0, WIDTH, HEIGHT)
+    this.bufferContext.fillStyle = 'rgba(0, 0, 0, 0.75)'
+    this.bufferContext.fillRect(0, 0, WIDTH, HEIGHT)
+    this.bufferContext.font = `${FONT_SIZE}px monospace`
+    this.bufferContext.fillStyle = '#00FF41'
     _.each(this._renderWindow(this.x), (row, idx) => {
       this.bufferContext.fillText(row, 5, 20 + idx * 1.5 * FONT_SIZE)
     })
+    requestAnimationFrame(() => this.render())
   }
 
   forward() {
     this.x += 2
-    this.render()
   }
 
   backward() {
     this.x = Math.max(this.x - 2, 0)
-    this.render()
   }
 
   // calculate the entire view once as an array of strings
